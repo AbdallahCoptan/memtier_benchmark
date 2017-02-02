@@ -74,7 +74,7 @@ unsigned long long random_generator::get_random()
     llrn = llrn << 32; // move to upper 32bits
 
     rn = nrand48(m_data_blob); // max is 1<<31
-    llrn |= rn; // max is 1<<31
+    llrn |= rn; // set lower 32bits
 #else
     #error no random function
 #endif
@@ -398,7 +398,7 @@ data_object* object_generator::get_object(int iter)
         new_size = m_data_size.size_fixed;
     } else if (m_data_size_type == data_size_range) {
         if (m_data_size_pattern && *m_data_size_pattern=='S') {
-            float a = (m_key_index-m_key_min)/(m_key_max-m_key_min);
+            float a = (m_key_index-m_key_min)/(float)(m_key_max-m_key_min);
             new_size = (m_data_size.size_range.size_max-m_data_size.size_range.size_min)*a + m_data_size.size_range.size_min;
         } else {
             new_size = random_range(m_data_size.size_range.size_min > 0 ? m_data_size.size_range.size_min : 1,
